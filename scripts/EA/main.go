@@ -64,29 +64,27 @@ func GetSteamAppsPath(appid string, gameName string) (SteamApp, error) {
 			// 遍历map->libraryfolders
 			for _, value := range v["libraryfolders"].(map[string]interface{}) {
 				// 判断map的apps中是否有名为appid的键，如果存在则设置steamApp的GamePath为map的path+"/steamapps/common/"+gameName
-				if _, ok := value.(map[string]interface{})["apps"].(map[string]interface{})[appid]; ok {
-					tmpGamePath := value.(map[string]interface{})["path"].(string) + "/steamapps/common/" + gameName
-					// 判断GamePath目录是否存在
-					if _, err := os.Stat(tmpGamePath); err != nil {
-						return steamApp, err
-					}
-					steamApp.GamePath = tmpGamePath
-					tmpPfxPath := value.(map[string]interface{})["path"].(string) + "/steamapps/compatdata/" + appid + "/pfx"
-					// 判断pfxPath目录是否存在
-					if _, err := os.Stat(tmpPfxPath); err != nil {
-						for _, localPath := range steamPath {
-							tmpPfxPath = homePath + "/" + localPath + "/steamapps/compatdata/" + appid + "/pfx"
-							if _, err := os.Stat(tmpPfxPath); err == nil {
-								steamApp.pfxPath = tmpPfxPath
-								break
-							}
-						}
-					} else {
-						steamApp.pfxPath = tmpPfxPath
-					}
-					steamApp.pfxPath = tmpPfxPath
-					return steamApp, nil
+				tmpGamePath := value.(map[string]interface{})["path"].(string) + "/steamapps/common/" + gameName
+				// 判断GamePath目录是否存在
+				if _, err := os.Stat(tmpGamePath); err != nil {
+					return steamApp, err
 				}
+				steamApp.GamePath = tmpGamePath
+				tmpPfxPath := value.(map[string]interface{})["path"].(string) + "/steamapps/compatdata/" + appid + "/pfx"
+				// 判断pfxPath目录是否存在
+				if _, err := os.Stat(tmpPfxPath); err != nil {
+					for _, localPath := range steamPath {
+						tmpPfxPath = homePath + "/" + localPath + "/steamapps/compatdata/" + appid + "/pfx"
+						if _, err := os.Stat(tmpPfxPath); err == nil {
+							steamApp.pfxPath = tmpPfxPath
+							break
+						}
+					}
+				} else {
+					steamApp.pfxPath = tmpPfxPath
+				}
+				steamApp.pfxPath = tmpPfxPath
+				return steamApp, nil
 			}
 
 		}
