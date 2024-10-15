@@ -120,10 +120,16 @@ func UnLockEaGameDlc(steamApp SteamApp) error {
 		return err
 	}
 	if _, err := os.Stat(eaDesktopBasePath + "/EA Desktop"); err == nil {
-		CopyFile("./EaUnLockerTool/ea_desktop/version.dll", eaDesktopBasePath+"/EA Desktop/version.dll")
+		err = CopyFile("./EaUnLockerTool/ea_desktop/version.dll", eaDesktopBasePath+"/EA Desktop/version.dll")
+		if err != nil {
+			return err
+		}
 		fmt.Printf("From %s to %s \n", "./EaUnLockerTool/ea_desktop/version.dll", eaDesktopBasePath+"/EA Desktop/version.dll")
 	} else {
-		CopyFile("./EaUnLockerTool/ea_desktop/version.dll", eaDesktopBasePath+"/version.dll")
+		err = CopyFile("./EaUnLockerTool/ea_desktop/version.dll", eaDesktopBasePath+"/version.dll")
+		if err != nil {
+			return err
+		}
 		fmt.Printf("From %s to %s \n", "./EaUnLockerTool/ea_desktop/version.dll", eaDesktopBasePath+"/version.dll")
 	}
 	// 创建配置文件
@@ -136,8 +142,14 @@ func UnLockEaGameDlc(steamApp SteamApp) error {
 	// 复制配置文件
 	// 用/分割steamApp.GamePath，取最后一个元素作为游戏名
 	gameConfigName := "g_" + strings.Split(steamApp.GamePath, "/")[len(strings.Split(steamApp.GamePath, "/"))-1] + ".ini"
-	CopyFile("./EaUnLockerTool/"+gameConfigName, eaUnlockConfig+"/"+gameConfigName)
-	CopyFile("./EaUnLockerTool/config.ini", eaUnlockConfig+"/config.ini")
+	err := CopyFile("./EaUnLockerTool/"+gameConfigName, eaUnlockConfig+"/"+gameConfigName)
+	if err != nil {
+		return err
+	}
+	err = CopyFile("./EaUnLockerTool/config.ini", eaUnlockConfig+"/config.ini")
+	if err != nil {
+		return err
+	}
 	fmt.Printf("From %s to %s \n", "./EaUnLockerTool/"+gameConfigName, eaUnlockConfig+"/"+gameConfigName)
 	fmt.Printf("From %s to %s \n", "./EaUnLockerTool/config.ini", eaUnlockConfig+"/config.ini")
 	return nil
