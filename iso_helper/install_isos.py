@@ -45,6 +45,7 @@ def main(iso_path: str, exclude: List[str]):
 
         print(f"{iso_file} -> {sims_path}")
         mount_iso_and_extract(iso_file, sims_path)
+        os.remove(iso_file)
 
 
 if __name__ == "__main__":
